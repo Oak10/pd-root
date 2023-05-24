@@ -1,0 +1,173 @@
+version: "3.6"
+
+services:
+  jaeger:
+    # container_name: jaeger
+    image: jaegertracing/all-in-one:1.43
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686"
+    networks:
+      - jaeger_network
+  
+  kafka:
+    image: 'bitnami/kafka:latest'
+    # ports:
+    #   - '9092:9092'
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_NODE_ID=1
+    networks:
+      - kafka_network
+      
+  postgres:
+    image: postgres:14.1
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    command: postgres -c max_connections=300
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=keycloak
+    networks:
+      - postgres_network
+      - keycloak_network
+
+  keycloak:
+    image: claudiooak/keycloak:21.1
+    command: start-dev
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      # Enable health and metrics support
+#      - KC_HEALTH_ENABLED=true
+#      - KC_METRICS_ENABLED=true
+      # Enable HTTP
+      - KC_HTTP_ENABLED=true
+      # change these values to point to a running postgres instance
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://postgres:5432/keycloak
+      - KC_DB_USERNAME=keycloak
+      - KC_DB_PASSWORD=keycloak
+      - KC_DB_SCHEMA=public
+      - KC_HOSTNAME_STRICT=false
+      - KC_HOSTNAME_STRICT_HTTPS=false
+    ports:
+      - 8443:8443
+      - 8080:8080
+    depends_on:
+      - postgres
+    networks:
+      - keycloak_network
+    
+  mail-service:
+    build:
+      context: ./pd-mailservice
+      dockerfile: DockerfileDev
+    command: sh -c "./mvnw clean compile spring-boot:run"
+    ports:
+      - 8084:8080
+      - 5004:5004
+    restart: on-failure:3
+    user: nonroot
+    environment:
+      - OTEL_RATIO=1.0
+      - OTEL_ENDPOINT=http://jaeger:4317
+      - MAIL_USER=demopd2023
+      - MAIL_PWD=kvuwlxjgxslezrni
+      - MAIL_PORT=587
+      - MAIL_HOST=smtp.gmail.com
+      # - KAFKA_BOOTSTRAP_SERVERS=kafka:9092,locahost:9092
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    volumes:
+      - ./pd-mailservice:/app
+    networks:
+      - kafka_network
+      - jaeger_network
+  
+  recomendation-service:
+    build:
+      context: ./pd-recomendationservice
+      dockerfile: DockerfileDev
+    command: sh -c "./mvnw clean compile spring-boot:run"
+    ports:
+      - 8081:8080
+      - 5000:5000
+    restart: on-failure:3
+    user: nonroot
+    environment:
+      - OTEL_RATIO=1.0
+      - OTEL_ENDPOINT=http://jaeger:4317
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - THEMOVIEDB_API_KEY=7a95be8446cfdcaef6da48bbf0ab7bbe
+    volumes:
+      - ./pd-recomendationservice:/app
+    networks:
+      - kafka_network
+      - jaeger_network
+
+ 
+  moviesstorage-service:
+    build:
+      context: ./pd-moviesstorageservice
+      dockerfile: DockerfileDev
+    command: sh -c "./mvnw clean compile spring-boot:run"
+    ports:
+      - 8888:8888
+      - 5001:5000
+    restart: on-failure:3
+    user: nonroot
+    environment:
+      - OTEL_RATIO=1.0
+      - OTEL_ENDPOINT=http://jaeger:4317
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - KEYCLOAK_REALM=demo-realm
+      - KEYCLOAK_AUTH_SERVER_URL=http://keycloak:8080
+      - KEYCLOAK_CREDENTIALS_SECRET=4CSLeCKaFqLlQCqwdCgfsDxwo6XCwEYW
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/keycloak
+      - SPRING_DATASOURCE_USERNAME=keycloak
+      - SPRING_DATASOURCE_PASSWORD=keycloak
+      - SPRING_DATASOURCE_DEBUG=false
+    volumes:
+      - ./pd-moviesstorageservice:/app
+    networks:
+      - kafka_network
+      - jaeger_network
+      - postgres_network
+      - keycloak_network
+  
+  frontend:
+    build:
+      context: ./pd-frontend
+      dockerfile: DockerfileLocal
+    command: sh -c "npm install && npm run start-development"
+    ports:
+      - "4200:4200"
+    restart: on-failure:3
+    volumes:
+      - ./pd-frontend:/frontend
+      
+networks:
+  kafka_network:
+  jaeger_network:
+  postgres_network:
+  keycloak_network:
+
+
+volumes:
+  kafka_data:
+    driver: local
+  postgres_data:
+    driver: local

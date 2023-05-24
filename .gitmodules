@@ -1,0 +1,20 @@
+[submodule "pd-frontend"]
+	path = pd-frontend
+	url = git@github.com:Oak10/pd-frontend.git
+	branch = master
+[submodule "pd-recomendationservice"]
+	path = pd-recomendationservice
+	url = git@github.com:Oak10/pd-recomendationservice.git
+	branch = master
+[submodule "pd-mailservice"]
+	path = pd-mailservice
+	url = git@github.com:Oak10/pd-mailservice.git
+	branch = master
+[submodule "pd-ansible"]
+	path = pd-ansible
+	url = git@github.com:Oak10/pd-ansible.git
+	branch = master
+[submodule "pd-moviesstorageservice"]
+	path = pd-moviesstorageservice
+	url = git@github.com:Oak10/pd-moviesstorageservice.git
+	branch = master
