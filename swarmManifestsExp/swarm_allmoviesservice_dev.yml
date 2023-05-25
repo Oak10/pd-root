@@ -1,0 +1,33 @@
+version: '3.7'
+services:
+  allmoviesservice-service:
+    image: claudiooak/allmoviesservice:dev-2 
+    deploy:
+      replicas: 1
+      labels:
+        # Enable traefik for this service
+        - "traefik.enable=true"
+        - "traefik.http.routers.allmoviesdev.rule=Host(`allmovies.dev.pd.com`)"
+        - "traefik.http.services.allmoviesdev-service.loadbalancer.server.port=8080"
+    environment:
+      - OTEL_RATIO=1.0
+      - OTEL_ENDPOINT=http://jaeger:4317
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/keycloak
+      - SPRING_DATASOURCE_USERNAME=keycloak
+      - SPRING_DATASOURCE_PASSWORD=keycloak
+      - SPRING_DATASOURCE_DEBUG=false
+      - THEMOVIEDB_API_KEY=7a95be8446cfdcaef6da48bbf0ab7bbe
+    networks:
+      - services_network
+      - postgres_network
+      - traefik_proxy
+
+networks:
+  kafka_network:
+  postgres_network:
+  services_network:
+  keycloak_network:
+  traefik_proxy:
+    #  If we want traefik to be able to proxy to multiple stacks we need to have one external network!!
+    external: true

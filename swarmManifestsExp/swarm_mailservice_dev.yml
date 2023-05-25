@@ -1,0 +1,25 @@
+services:
+  mailservice:
+    image: claudiooak/mailservice:dev-4 
+    deploy:
+      replicas: 1
+    environment:
+      - OTEL_RATIO= 1.0
+      - OTEL_ENDPOINT=http://jaeger:4317
+      - MAIL_USER=demopd2023
+      - MAIL_PWD=kvuwlxjgxslezrni
+      - MAIL_PORT=587
+      - MAIL_HOST=smtp.gmail.com
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - kafka_network
+      - services_network
+
+networks:
+  kafka_network:
+  postgres_network:
+  services_network:
+  keycloak_network:
+  traefik_proxy:
+    #  If we want traefik to be able to proxy to multiple stacks we need to have one external network!!
+    external: true

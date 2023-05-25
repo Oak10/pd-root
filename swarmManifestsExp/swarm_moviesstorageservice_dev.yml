@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  moviesstorage-service:
+    image: claudiooak/moviesstorageservice:dev-8 
+    deploy:
+      replicas: 1
+      labels:
+        # Enable traefik for this service
+        - "traefik.enable=true"
+        - "traefik.http.routers.moviesstoragedev.rule=Host(`moviesstorage.dev.pd.com`)"
+        - "traefik.http.services.moviesstoragedev-service.loadbalancer.server.port=8888"
+    environment:
+      - OTEL_RATIO=1.0
+      - OTEL_ENDPOINT=http://jaeger:4317
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - KEYCLOAK_REALM=demo-realm
+      - KEYCLOAK_AUTH_SERVER_URL=http://keycloak
+      - KEYCLOAK_CREDENTIALS_SECRET=SmmBeJCVXnTMpZVOw3niHq21SzVhJCkd
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/keycloak
+      - SPRING_DATASOURCE_USERNAME=keycloak
+      - SPRING_DATASOURCE_PASSWORD=keycloak
+      - SPRING_DATASOURCE_DEBUG=false
+    networks:
+      - services_network
+      - postgres_network
+      - keycloak_network
+      - traefik_proxy
+
+networks:
+  kafka_network:
+  postgres_network:
+  services_network:
+  keycloak_network:
+  traefik_proxy:
+    #  If we want traefik to be able to proxy to multiple stacks we need to have one external network!!
+    external: true

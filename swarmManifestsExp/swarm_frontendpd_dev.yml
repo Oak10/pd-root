@@ -1,0 +1,23 @@
+services:
+  frontendpd:
+    image: claudiooak/frontendpd:dev-12 
+    deploy:
+      replicas: 1
+      labels:
+        # Enable traefik for this service
+        # Enable traefik for this service
+        - "traefik.enable=true"
+        - "traefik.http.routers.frontendpddev.rule=Host(`frontendpd.dev.pd.com`)"
+        - "traefik.http.services.frontendpddev-service.loadbalancer.server.port=80"
+    networks:
+      - traefik_proxy
+
+
+networks:
+  kafka_network:
+  postgres_network:
+  services_network:
+  keycloak_network:
+  traefik_proxy:
+    #  If we want traefik to be able to proxy to multiple stacks we need to have one external network!!
+    external: true
