@@ -14,3 +14,7 @@
 	path = pd-moviesstorageservice
 	url = git@github.com:Oak10/pd-moviesstorageservice.git
 	branch = master
+[submodule "pd-recommendationservice"]
+	path = pd-recommendationservice
+	url = git@github.com:Oak10/pd-recommendationservice.git
+	branch = master
