@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>pd-recomendationservice</module>
+        <module>pd-recommendationservice</module>
         <module>pd-mailservice</module>
         <module>pd-moviesstorageservice</module>
     </modules>

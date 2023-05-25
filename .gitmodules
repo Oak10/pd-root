@@ -2,10 +2,6 @@
 	path = pd-frontend
 	url = git@github.com:Oak10/pd-frontend.git
 	branch = master
-[submodule "pd-recomendationservice"]
-	path = pd-recomendationservice
-	url = git@github.com:Oak10/pd-recomendationservice.git
-	branch = master
 [submodule "pd-mailservice"]
 	path = pd-mailservice
 	url = git@github.com:Oak10/pd-mailservice.git

@@ -96,9 +96,9 @@ services:
       - kafka_network
       - jaeger_network
   
-  recomendation-service:
+  recommendation-service:
     build:
-      context: ./pd-recomendationservice
+      context: ./pd-recommendationservice
       dockerfile: DockerfileDev
     command: sh -c "./mvnw clean compile spring-boot:run"
     ports:
@@ -115,7 +115,7 @@ services:
       - KEYCLOAK_AUTH_SERVER_URL=http://keycloak:8080
       - KEYCLOAK_CREDENTIALS_SECRET=4CSLeCKaFqLlQCqwdCgfsDxwo6XCwEYW
     volumes:
-      - ./pd-recomendationservice:/app
+      - ./pd-recommendationservice:/app
     networks:
       - kafka_network
       - jaeger_network
