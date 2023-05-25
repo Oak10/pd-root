@@ -89,7 +89,6 @@ services:
       - MAIL_PWD=kvuwlxjgxslezrni
       - MAIL_PORT=587
       - MAIL_HOST=smtp.gmail.com
-      # - KAFKA_BOOTSTRAP_SERVERS=kafka:9092,locahost:9092
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     volumes:
       - ./pd-mailservice:/app
@@ -112,11 +111,15 @@ services:
       - OTEL_ENDPOINT=http://jaeger:4317
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - THEMOVIEDB_API_KEY=7a95be8446cfdcaef6da48bbf0ab7bbe
+      - KEYCLOAK_REALM=demo-realm
+      - KEYCLOAK_AUTH_SERVER_URL=http://keycloak:8080
+      - KEYCLOAK_CREDENTIALS_SECRET=4CSLeCKaFqLlQCqwdCgfsDxwo6XCwEYW
     volumes:
       - ./pd-recomendationservice:/app
     networks:
       - kafka_network
       - jaeger_network
+      - keycloak_network
 
  
   moviesstorage-service:
@@ -152,7 +155,7 @@ services:
     build:
       context: ./pd-frontend
       dockerfile: DockerfileLocal
-    command: sh -c "npm install && npm run start-development"
+    command: sh -c "npm install && npm run start-local"
     ports:
       - "4200:4200"
     restart: on-failure:3
@@ -167,7 +170,5 @@ networks:
 
 
 volumes:
-  kafka_data:
-    driver: local
   postgres_data:
     driver: local

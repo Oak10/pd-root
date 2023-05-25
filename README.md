@@ -5,8 +5,8 @@
 ```
 # Clone the repo and submodules:
 git clone git@github.com:Oak10/pd-root.git --recurse-submodules
-# update submodules
-git submodule update --remote
+# update submodules (master branch)
+git submodule foreach 'git fetch && git checkout master && git pull'
 ```
 
 ### Local
@@ -14,7 +14,7 @@ git submodule update --remote
 docker-compose up -d
 ```
 - create realm (demo-real), users (angular-demo, spring-boot-demo), and roles (ROLE_APP for all users) at keycloak
-- update token generated in keycloak (spring services - KEYCLOAK_CREDENTIALS_SECRET)
+- update token generated in keycloak (spring services - KEYCLOAK_CREDENTIALS_SECRET) || OR || upload realm in keycloak UI (files in keycloak dir)
 - Configure smtp (use google) and update variables (mail service)
 
 ### APP Links (servers)
@@ -22,10 +22,13 @@ docker-compose up -d
 # base: 
 http://{service}.{environment}.pd.com
 
-# Exp (dev env   - test (recomendation -> kafka -> mailservice -> mail))
+# Exp (access keycloak):
+http://keycloak.dev.pd.com/
+# Exp (dev env   - test (recomendation -> kafka -> mailservice -> mail)):
 http://recomendation.dev.pd.com/kafka/produce
 # Exp (localhost)
 http://localhost:8081/kafka/produce
+
 
 ```
 

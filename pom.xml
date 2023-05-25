@@ -3,15 +3,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ex</groupId>
-    <artifactId>pdtp3</artifactId>
+    <artifactId>pdtp2</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>pdtp2</name>
     <packaging>pom</packaging>
 
     <modules>
-        <module>recomendationservice</module>
-        <module>mailservice</module>
-        <module>moviesstorageservice</module>
+        <module>pd-recomendationservice</module>
+        <module>pd-mailservice</module>
+        <module>pd-moviesstorageservice</module>
     </modules>
 
 </project>
