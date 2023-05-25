@@ -61,6 +61,9 @@
             "demo-angular": [
               "ROLE_APP"
             ],
+            "demo-spring-boot-recom": [
+              "ROLE_APP"
+            ],
             "demo-spring-boot": [
               "ROLE_APP"
             ],
@@ -102,6 +105,17 @@
           "composite": false,
           "clientRole": true,
           "containerId": "5294467c-482a-4243-aa2a-9b5baa3f468e",
+          "attributes": {}
+        }
+      ],
+      "demo-spring-boot-recom": [
+        {
+          "id": "bdcb5ff5-543d-415f-b442-5a2bc4446991",
+          "name": "ROLE_APP",
+          "description": "ROLE_APP",
+          "composite": false,
+          "clientRole": true,
+          "containerId": "faa4bf84-d909-4bac-8666-0ffac70cba70",
           "attributes": {}
         }
       ],
@@ -496,6 +510,22 @@
       ],
       "notBefore": 0,
       "groups": []
+    },
+    {
+      "id": "4d69d8ff-f573-4cd5-a84d-de034aecb420",
+      "createdTimestamp": 1685045305801,
+      "username": "service-account-demo-spring-boot-recom",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": false,
+      "serviceAccountClientId": "demo-spring-boot-recom",
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": [
+        "default-roles-demo-realm"
+      ],
+      "notBefore": 0,
+      "groups": []
     }
   ],
   "scopeMappings": [
@@ -839,6 +869,104 @@
             "id.token.claim": "true",
             "access.token.claim": "true",
             "claim.name": "clientHost",
+            "jsonType.label": "String"
+          }
+        }
+      ],
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "roles",
+        "profile",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    },
+    {
+      "id": "faa4bf84-d909-4bac-8666-0ffac70cba70",
+      "clientId": "demo-spring-boot-recom",
+      "name": "demo-spring-boot-recom",
+      "description": "demo-spring-boot-recom",
+      "rootUrl": "http://recommendation-service:8080",
+      "adminUrl": "http://recommendation-service:8080",
+      "baseUrl": "http://recommendation-service:8080",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "**********",
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [
+        "*"
+      ],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "publicClient": false,
+      "frontchannelLogout": true,
+      "protocol": "openid-connect",
+      "attributes": {
+        "oidc.ciba.grant.enabled": "false",
+        "client.secret.creation.time": "1685045305",
+        "backchannel.logout.session.required": "true",
+        "post.logout.redirect.uris": "*",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "backchannel.logout.revoke.offline.tokens": "false"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "protocolMappers": [
+        {
+          "id": "5733c456-b52e-4ef8-b596-65a2303fdcb6",
+          "name": "Client ID",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionmodel-note-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.session.note": "client_id",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "client_id",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "id": "5b359d61-e6f7-4236-9ad1-e80bb5a1e233",
+          "name": "Client Host",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionmodel-note-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.session.note": "clientHost",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientHost",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "id": "d0f812bf-42f7-477c-a487-c011b8cdaebf",
+          "name": "Client IP Address",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionmodel-note-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.session.note": "clientAddress",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientAddress",
             "jsonType.label": "String"
           }
         }

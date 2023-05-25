@@ -113,7 +113,7 @@ services:
       - THEMOVIEDB_API_KEY=7a95be8446cfdcaef6da48bbf0ab7bbe
       - KEYCLOAK_REALM=demo-realm
       - KEYCLOAK_AUTH_SERVER_URL=http://keycloak:8080
-      - KEYCLOAK_CREDENTIALS_SECRET=4CSLeCKaFqLlQCqwdCgfsDxwo6XCwEYW
+      - KEYCLOAK_CREDENTIALS_SECRET=MFmgfIMM2VkMQIOZ7V5lSdckwBMm38SX
     volumes:
       - ./pd-recommendationservice:/app
     networks:
@@ -150,6 +150,30 @@ services:
       - jaeger_network
       - postgres_network
       - keycloak_network
+
+  allmoviesservice-service:
+    build:
+      context: ./pd-allmoviesservice
+      dockerfile: DockerfileDev
+    command: sh -c "./mvnw clean compile spring-boot:run"
+    ports:
+      - 8090:8080
+    # Debug  - 5001:5000
+    restart: on-failure:3
+    user: nonroot
+    environment:
+      - OTEL_RATIO=1.0
+      - OTEL_ENDPOINT=http://jaeger:4317
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/keycloak
+      - SPRING_DATASOURCE_USERNAME=keycloak
+      - SPRING_DATASOURCE_PASSWORD=keycloak
+      - SPRING_DATASOURCE_DEBUG=false
+      - THEMOVIEDB_API_KEY=7a95be8446cfdcaef6da48bbf0ab7bbe
+    volumes:
+      - ./pd-allmoviesservice:/app
+    networks:
+      - jaeger_network
+      - postgres_network
   
   frontend:
     build:

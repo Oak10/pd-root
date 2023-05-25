@@ -24,10 +24,12 @@ http://{service}.{environment}.pd.com
 
 # Exp (access keycloak):
 http://keycloak.dev.pd.com/
-# Exp (dev env   - test (recomendation -> kafka -> mailservice -> mail)):
-http://recomendation.dev.pd.com/kafka/produce
+# Exp (dev env   - test (recommendation -> kafka -> mailservice -> mail)):
+http://recommendation.dev.pd.com/kafka/produce
 # Exp (localhost)
 http://localhost:8081/kafka/produce
+#EXP (allmoviesservice)
+http://localhost:8090/v1/search/movie?movieName=Jack+Reacher
 
 
 ```
@@ -39,19 +41,22 @@ http://localhost:8081/kafka/produce
 docker build -t claudiooak/keycloak:21.1 -f DockerfileKeycloak .
 ```
 
-### mailservice, moviestorageservice, recomendationservice, and frontend:
+### mailservice, moviestorageservice, recommendationservice, frontend, and allmoviesservice:
 ```
 docker build -t claudiooak/mailservice:0.0.1 -f Dockerfile .
 docker push claudiooak/mailservice:0.0.1
 
-docker build -t claudiooak/recomendationservice:0.0.1 -f Dockerfile .
-docker push claudiooak/recomendationservice:0.0.1
+docker build -t claudiooak/recommendationservice:0.0.1 -f Dockerfile .
+docker push claudiooak/recommendationservice:0.0.1
 
 docker build -t claudiooak/moviesstorageservice:0.0.1 -f Dockerfile .
 docker push claudiooak/moviesstorageservice:0.0.1
 
 docker build -t claudiooak/frontendpd:0.0.2 -f Dockerfile .
 docker push claudiooak/frontendpd:0.0.2
+
+docker build -t claudiooak/allmoviesservice:0.0.1 -f Dockerfile .
+docker push claudiooak/allmoviesservice:0.0.1
 ```
 
 # SWARM:
@@ -89,9 +94,10 @@ ansible-playbook -i inventory/prod/hosts.yml --diff playbooks/infra-swarm.yml
 ansible-playbook -i pd-ansible/inventory/dev/hosts.yml --diff pd-ansible/playbooks/traefik-swarm.yml 
 ansible-playbook -i pd-ansible/inventory/dev/hosts.yml --diff pd-ansible/playbooks/infra-swarm.yml 
 ansible-playbook -i pd-ansible/inventory/dev/hosts.yml --diff pd-ansible/playbooks/mailservice-swarm.yml 
-ansible-playbook -i pd-ansible/inventory/dev/hosts.yml --diff pd-ansible/playbooks/recomendationservice-swarm.yml 
+ansible-playbook -i pd-ansible/inventory/dev/hosts.yml --diff pd-ansible/playbooks/recommendationservice-swarm.yml 
 ansible-playbook -i pd-ansible/inventory/dev/hosts.yml --diff pd-ansible/playbooks/moviesstorageservice-swarm.yml 
 ansible-playbook -i pd-ansible/inventory/dev/hosts.yml --diff pd-ansible/playbooks/frontendpd-swarm.yml 
+ansible-playbook -i pd-ansible/inventory/dev/hosts.yml --diff pd-ansible/playbooks/allmoviesservice-swarm.yml 
 ```
 
 # Generate account for mail (Google)

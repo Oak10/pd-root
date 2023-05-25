@@ -12,6 +12,7 @@
         <module>pd-recommendationservice</module>
         <module>pd-mailservice</module>
         <module>pd-moviesstorageservice</module>
+        <module>pd-allmoviesservice</module>
     </modules>
 
 </project>
